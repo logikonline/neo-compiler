@@ -74,17 +74,19 @@ namespace vmtool
 
             //hash
             StringBuilder sb = new StringBuilder();
-            foreach (var b in hash)
+            sb.Append("0x");
+            foreach (var b in hash.Reverse().ToArray())
             {
-                sb.Append(b.ToString("X02"));
+                sb.Append(b.ToString("x02"));
             }
             outjson.SetDictValue("hash", sb.ToString());
 
             //entrypoint
             outjson.SetDictValue("entrypoint", "Main");
-            if (module.mapMethods.ContainsKey("Main"))
+            var mainmethod = module.mapMethods[module.mainMethod];
+            if (mainmethod != null)
             {
-                var name = module.mapMethods["Main"].displayName;
+                var name = mainmethod.displayName;
                 outjson.SetDictValue("entrypoint", name);
             }
             //functions
